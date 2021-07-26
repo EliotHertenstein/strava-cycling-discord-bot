@@ -1,0 +1,5 @@
+# Custom Files
+.env
+
+#MacOS
+.DS_Store
