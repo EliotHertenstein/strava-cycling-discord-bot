@@ -79,7 +79,28 @@ async function getClubActivites() {
     'id': 'berkeley-high-cycling',
     'per_page': '5'
   });
+  console.log(`Got Activites`);
   console.log(activites);
+
+  // convert meters to miles
+
+  function convertMetersToRoundedMiles(meters) {
+    return Math.round(meters * 0.000621371 * 100) / 100;
+  };
+
+  // convert meters to feet
+  function convertMetersToRoundedFeet(meters) {
+    return Math.round(meters * 3.28084 * 100) / 100;
+  }
+
+  // convert seconds to hh:mm:ss
+  function convertSecondsToTime(seconds) {
+    var hours = Math.floor(seconds / 3600);
+    var minutes = Math.floor((seconds % 3600) / 60);
+    var seconds = seconds % 60;
+    return (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+  };
+
   const embed = {
     color: 0xfc4c02,
     title: 'Recent Club Rides',
@@ -89,46 +110,46 @@ async function getClubActivites() {
     fields: [
       {
         name: `${activites[0].name} | ${activites[0].athlete.firstname} ${activites[0].athlete.lastname}`,
-        value: `Distance: \`\`${activites[0].distance} mi\`\`
-        Elevation Gain: \`\`${activites[0].total_elevation_gain} ft\`\`
-        Elapsed Time: \`\`${activites[0].elapsed_time} minutes\`\`
-        Moving Time: \`\`${activites[0].moving_time} minutes\`\`
+        value: `Distance: \`\`${convertMetersToRoundedMiles(activites[0].distance)} mi\`\`
+        Elevation Gain: \`\`${convertMeterstoRoundedFeet(activites[0].total_elevation_gain)} ft\`\`
+        Elapsed Time: \`\`${convertSecondsToTime(activites[0].elapsed_time)}\`\`
+        Moving Time: \`\`${convertSecondsToTime(activites[0].moving_time)}\`\`
         Type: \`\`${activites[0].type}\`\``,
         inline: false
       },
       {
         name: `${activites[1].name} | ${activites[1].athlete.firstname} ${activites[1].athlete.lastname}`,
-        value: `Distance: \`\`${activites[1].distance} mi\`\`
-        Elevation Gain: \`\`${activites[1].total_elevation_gain} ft\`\`
-        Elapsed Time: \`\`${activites[1].elapsed_time} minutes\`\`
-        Moving Time: \`\`${activites[1].moving_time} minutes\`\`
+        value: `Distance: \`\`${convertMetersToRoundedMiles(activites[1].distance)} mi\`\`
+        Elevation Gain: \`\`${convertMeterstoRoundedFeet(activites[1].total_elevation_gain)} ft\`\`
+        Elapsed Time: \`\`${convertSecondsToTime(activites[1].elapsed_time)} minutes\`\`
+        Moving Time: \`\`${convertSecondsToTime(activites[1].moving_time)} minutes\`\`
         Type: \`\`${activites[1].type}\`\``,
         inline: false
       },
       {
         name: `${activites[2].name} | ${activites[2].athlete.firstname} ${activites[2].athlete.lastname}`,
-        value: `Distance: \`\`${activites[2].distance} mi\`\`
-        Elevation Gain: \`\`${activites[2].total_elevation_gain} ft\`\`
-        Elapsed Time: \`\`${activites[2].elapsed_time} minutes\`\`
-        Moving Time: \`\`${activites[2].moving_time} minutes\`\`
+        value: `Distance: \`\`${convertMetersToRoundedMiles(activites[2].distance)} mi\`\`
+        Elevation Gain: \`\`${convertMeterstoRoundedFeet(activites[2].total_elevation_gain)} ft\`\`
+        Elapsed Time: \`\`${convertSecondsToTime(activites[2].elapsed_time)} minutes\`\`
+        Moving Time: \`\`${convertSecondsToTime(activites[2].moving_time)} minutes\`\`
         Type: \`\`${activites[2].type}\`\``,
         inline: false
       },
       {
         name: `${activites[3].name} | ${activites[3].athlete.firstname} ${activites[3].athlete.lastname}`,
-        value: `Distance: \`\`${activites[3].distance} mi\`\`
-        Elevation Gain: \`\`${activites[3].total_elevation_gain} ft\`\`
-        Elapsed Time: \`\`${activites[3].elapsed_time} minutes\`\`
-        Moving Time: \`\`${activites[3].moving_time} minutes\`\`
+        value: `Distance: \`\`${convertMetersToRoundedMiles(activites[3].distance)} mi\`\`
+        Elevation Gain: \`\`${convertMeterstoRoundedFeet(activites[3].total_elevation_gain)} ft\`\`
+        Elapsed Time: \`\`${convertSecondsToTime(activites[3].elapsed_time)} minutes\`\`
+        Moving Time: \`\`${convertSecondsToTime(activites[3].moving_time)} minutes\`\`
         Type: \`\`${activites[3].type}\`\``,
         inline: false
       },
       {
         name: `${activites[4].name} | ${activites[4].athlete.firstname} ${activites[4].athlete.lastname}`,
-        value: `Distance: \`\`${activites[4].distance} mi\`\`
-        Elevation Gain: \`\`${activites[4].total_elevation_gain} ft\`\`
-        Elapsed Time: \`\`${activites[4].elapsed_time} minutes\`\`
-        Moving Time: \`\`${activites[4].moving_time} minutes\`\`
+        value: `Distance: \`\`${convertMetersToRoundedMiles(activites[4].distance)} mi\`\`
+        Elevation Gain: \`\`${convertMeterstoRoundedFeet(activites[4].total_elevation_gain)} ft\`\`
+        Elapsed Time: \`\`${convertSecondsToTime(activites[4].elapsed_time)} minutes\`\`
+        Moving Time: \`\`${convertSecondsToTime(activites[4].moving_time)} minutes\`\`
         Type: \`\`${activites[4].type}\`\``,
         inline: false
       }
