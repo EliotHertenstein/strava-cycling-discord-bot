@@ -147,6 +147,7 @@ async function getClubActivites() {
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
+  client.user.setActivity(`Join our strava club! | /strava`, { type: "PLAYING"});
   refreshClubActivites.start();
   refreshAccessToken.start();
 });
@@ -162,53 +163,15 @@ client.on('messageCreate', async message => {
 	if (messageContent[0].toLowerCase() === '!deploy_slash_command' && message.author.id === client.application?.owner.id) {
 
     const data = {
-			name: 'sc_perms',
-			description: 'Set permissions of a Slash Command',
+			name: 'strava_user',
+			description: 'Get information about a Strava username. Must be in the Berkley High Cycling Club on Strava.',
       options: [
         {
-        name: 'command',
+        name: 'username',
         type: 'STRING',
-        description: 'The Slash Command ID',
-        required: true,
-        },  
-        {
-          name: 'id',
-          type: 'STRING',
-          description: 'The User or Role ID',
-          required: true,
-        }, 
-        {
-          name: 'type',
-          type: 'STRING',
-          description: 'Specify if ID is a User or a Role',
-          required: true,
-          choices: [
-            {
-              name: 'User',
-              value: 'USER',
-            },
-            {
-              name: 'Role',
-              value: 'ROLE',
-            }
-          ]          
-        },
-        {
-          name: 'allowdeny',
-          type: 'STRING',
-          description: 'Allow or Deny this user/role access',
-          required: true,
-          choices: [
-            {
-              name: 'Allow',
-              value: 'true',
-            },
-            {
-              name: 'Deny',
-              value: 'false',
-            }
-          ]          
-        }                        
+        description: `The user's username`,
+        required: true
+        }                      
       ]
 		};
 
