@@ -12,6 +12,7 @@ const client = new Discord.Client({
       "GUILD_BANS",
       "GUILD_EMOJIS",
       "GUILD_INTEGRATIONS",
+      "GUILD_MESSAGE_REACTIONS",
       "GUILD_WEBHOOKS",
       "GUILD_INVITES",
       "GUILD_VOICE_STATES",
@@ -21,6 +22,11 @@ const client = new Discord.Client({
       "DIRECT_MESSAGES",
       "DIRECT_MESSAGE_REACTIONS",
       "DIRECT_MESSAGE_TYPING"
+    ],
+    partials: [
+      "MESSAGE",
+      "CHANNEL",
+      "REACTION",
     ]
   })
 
@@ -63,14 +69,6 @@ function getAccessToken() {
 }
 
 var access_token = getAccessToken()
-
-var refreshClubActivites = new CronJob('*/15 * * * *', function() {
-  getClubActivites();
-}, null, true, 'America/Los_Angeles');
-
-var refreshAccessToken = new CronJob('0 * * * *', function() {
-  access_token = getAccessToken();
-}, null, true, 'America/Los_Angeles');
 
 async function getClubActivites() {
   //get club activites
@@ -166,6 +164,14 @@ async function getClubActivites() {
   });
 };
 
+var refreshAccessToken = new CronJob('0 * * * *', function() {
+  access_token = getAccessToken();
+}, null, true, 'America/Los_Angeles');
+
+var refreshClubActivites = new CronJob('*/15 * * * *', function() {
+  getClubActivites();
+}, null, true, 'America/Los_Angeles');
+
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
   client.user.setActivity(`Join our strava club! | /strava`, { type: "PLAYING"});
@@ -207,11 +213,11 @@ client.on('interactionCreate', async interaction => {
 
   if (interaction.commandName === 'help') {    
     const helpEmbed = {
-      color: 0x0099ff,
+      color: 0xfdb614,
       title: 'Berkeley High Cycling',
       description: "Hello, and welcome to the Berkeley High Cycling Discord!\n\nHere, you can schedule rides, keep updated with the Club, and much more.\n\nI'm the BHS Cycling Discord Bot, and I'm here to help out! You can see a list of avalible commands by typing `/`.",
       thumbnail: {
-        url: 'https://discord.com/assets/6f26ddd1bf59740c536d2274bb834a05.png',
+        url: 'https://cdn.discordapp.com/icons/865312044068634634/7beb3fce0696960ff406cc34ef2a2338.webp?size=256',
       },
       timestamp: new Date(),
     };
@@ -232,6 +238,76 @@ client.on('interactionCreate', async interaction => {
       timestamp: new Date(),
       footer: {
         text: `Member Count: ${response.member_count}`,
+      },
+    };
+
+    await interaction.reply({ embeds: [stravaEmbed] });
+  };
+
+  if (interaction.commandName === 'next_ride') {
+    const response = await strava.clubs.listEvents({'access_token': access_token, 'id': "berkeley-high-cycling"});
+
+    console.log(response);
+
+    var dateTime = new Date(response[0].upcoming_occurrences[0]);
+
+    function skillLevelString(skill_level) {
+      if (skill_level === 1) {
+        return "Casual (No Drop)";
+      } else if (skill_level === 2) {
+        return "Tempo"
+      } else {
+        return "Race Pace"
+      };
+    };
+      
+    function terrainTypeString(terrain_type) {
+      if (terrain_type === 1) {
+        return "Mostly Flat";
+      } else if (terrain_type === 2) {
+        return "Rolling Hills"
+      } else {
+        return "Killer Climbs"
+      };
+    };
+
+    var skillLevel = skillLevelString(response[0].skill_levels);
+    var terrainType = terrainTypeString(response[0].terrain);
+
+    const stravaEmbed = {
+      color: 0xfc4c02,
+      title: response[0].title,
+      url: `https://www.strava.com/clubs/960150/group_events/${response[0].id}`,
+      description: response[0].description,
+      thumbnail: {
+        url: 'https://pbs.twimg.com/profile_images/900411562250256384/ALkwa0jf_400x400.jpg',
+      },
+      // add fields
+      fields: [
+        {
+          name: 'Time',
+          value: dateTime.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }),
+          inline: true
+        },
+        {
+          name: 'Location',
+          value: response[0].address,
+          inline: true
+        },
+        {
+          name: 'Skill Level',
+          value: skillLevel,
+          inline: true
+        },
+        {
+          name: 'Terrain Type',
+          value: terrainType,
+          inline: true
+        }
+      ],
+      timestamp: new Date(),
+      footer: {
+        text: `Event created by ${response[0].organizing_athlete.firstname}`,
       },
     };
 
@@ -324,6 +400,27 @@ client.on('interactionCreate', async interaction => {
     }
     catch (err) {
       await interaction.reply({ content: `Error`, ephemeral: true });
+    };
+  };
+});
+
+// get reaction
+client.on('messageReactionAdd', async (reaction, user) => {
+  if (reaction.message.id == '871048479139577866') {
+    if (reaction.emoji.name == 'strava_logo') {
+      const memberWhoReacted = await reaction.message.guild.members.fetch(user.id);
+      memberWhoReacted.roles.add('870756385804152863');
+      console.log(`Added role to ${user.username}`);
+    };
+  };
+});
+
+client.on('messageReactionRemove', async (reaction, user) => {
+  if (reaction.message.id == '871048479139577866') {
+    if (reaction.emoji.name == 'strava_logo') {
+      const memberWhoReacted = await reaction.message.guild.members.fetch(user.id);
+      memberWhoReacted.roles.remove('870756385804152863');
+      console.log(`Removed role from ${user.username}`);
     };
   };
 });
