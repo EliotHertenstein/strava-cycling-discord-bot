@@ -262,9 +262,9 @@ client.on('interactionCreate', async interaction => {
     };
       
     function terrainTypeString(terrain_type) {
-      if (terrain_type === 1) {
+      if (terrain_type === 0) {
         return "Mostly Flat";
-      } else if (terrain_type === 2) {
+      } else if (terrain_type === 1) {
         return "Rolling Hills"
       } else {
         return "Killer Climbs"
