@@ -314,6 +314,18 @@ client.on('interactionCreate', async interaction => {
     await interaction.reply({ embeds: [stravaEmbed] });
   };
 
+  if (interaction.commandName === 'calendar') {
+    const embed = {
+      color: 0xfc4c02,
+      title: 'Calendar',
+      url: 'https://calendar.google.com/calendar/u/0?cid=NXYzYzkyZTl2Njh0NTdlcGRzOTcxcWhzdWNAZ3JvdXAuY2FsZW5kYXIuZ29vZ2xlLmNvbQ',
+      description: 'Add the BHS Calendar Events to YOUR Calendar! Integrate with Google Calendar using the link above, or [integrate with a different calendar](https://calendar.google.com/calendar/ical/5v3c92e9v68t57epds971qhsuc%40group.calendar.google.com/public/basic.ics)',
+      timestamp: new Date(),
+    };
+  
+    await interaction.reply({ embeds: [embed] });
+  };
+
   if (interaction.commandName === 'sc_list') {
     const command = await client.guilds.cache.get(interaction.guild.id)?.commands.fetch();
     const iterator1 = command[Symbol.iterator]();
