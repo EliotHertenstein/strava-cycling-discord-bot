@@ -1,5 +1,7 @@
 # Custom Files
 .env
+node_modules/
+node/
 
 #MacOS
 .DS_Store
