@@ -10,7 +10,7 @@ const client = new Discord.Client({
       "GUILDS",
       "GUILD_MEMBERS",
       "GUILD_BANS",
-      "GUILD_EMOJIS",
+      "GUILD_EMOJIS_AND_STICKERS",
       "GUILD_INTEGRATIONS",
       "GUILD_MESSAGE_REACTIONS",
       "GUILD_WEBHOOKS",
